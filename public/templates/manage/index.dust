@@ -1,6 +1,29 @@
 {>"layouts/manage" /}
 
 {<body}
-<h2>Manager</h2>
-<p></p>
+    <h2>Rented books</h2>
+	<table>
+	  <thead>
+	    <tr>
+	      <th width="200">ID</th>
+	      <th width="200">Book Title</th>
+	      <th width="180"></th> 
+	    </tr>
+	  </thead>
+	  <tbody>
+	  	{#rents}
+	    <tr>
+	      <td>{._id}</td>
+	      <td>{.title}</td>
+          <td>
+            <form method="post" action="/manage/return/{._id}">
+                <input type="submit" value="Return" class="button warning" />
+                <input type="hidden" name="_csrf" value="{_csrf}" />
+                <input type="hidden" name="_method" value="RETURN" />
+            </form>
+          </td>
+	    </tr>
+	    {/rents}
+	  </tbody>
+	</table>
 {/body}

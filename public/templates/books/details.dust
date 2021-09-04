@@ -16,9 +16,5 @@
     <br>
     <p>{book.description}</p>
     
-    <form method="post" action="/cart/{book._id}">
-      <input type="submit" class="button success" value="Add To Cart">
-      <input type="hidden" value="{_csrf}" name="_csrf">
-    </form>
   	</div>
 {/body}
