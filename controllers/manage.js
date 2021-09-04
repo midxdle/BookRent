@@ -2,10 +2,54 @@
 
 var Book = require('../models/bookModel');
 var Category = require('../models/categoryModel');
+var Rent = require('../models/rentModel');
 
 module.exports = function(router){
     router.get('/', function(req, res) {
-        res.render('manage/index');
+        Rent.find({}, function(err, rents){
+            if(err){
+                console.log(err);
+            }
+
+            var model = {
+                rents: rents
+            }
+            res.render('manage/index', model);
+        });
+        
+    });
+
+    router.post('/return/:id', function(req, res) {
+            Rent.findOne({_id : req.params.id}, function(err, rent) {
+                if(err) {
+                    console.log(err);
+                }
+                var newBook = Book({
+                    _id : rent._id,
+                    title : rent.title,
+                    description : rent.description,
+                    category : rent.category,
+                    author : rent.author,
+                    publisher : rent.publisher,
+                    price : rent.price,
+                    cover : rent.cover
+                });
+
+                newBook.save(function(err) {
+                    if(err) {
+                        console.log('save error', err);
+                    }
+
+                Rent.remove({_id: req.params.id}, function(err) {
+                    if(err) {
+                        console.log(err);
+                    }
+                });
+                req.flash('success', "Book Returned");
+                res.location('/manage');
+                res.redirect('/manage');
+            });
+        });
     });
 
     router.get('/books', function(req, res) {
