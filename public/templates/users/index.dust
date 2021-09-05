@@ -1,0 +1,13 @@
+{>"layouts/layout" /}
+
+<h1>Members Area</h1>
+<p>Welcome to members area</p>
+<div role="navigation" class="navbar navbar-default">
+    <div class="container">
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/users/logout">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>

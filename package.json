@@ -10,6 +10,13 @@
     "all": "npm run build && npm run test"
   },
   "dependencies": {
+    "jade": "~1.11.0",
+    "bcryptjs": "^2.4.3",
+    "express-validator": "5.3.1",
+    "express-session": "^1.17.2",
+    "passport": "^0.4.1",
+    "passport-http": "^0.3.0",
+    "passport-local": "^1.0.0",
     "connect-flash": "^0.1.1",
     "construx": "^1.0.0",
     "construx-copier": "^1.0.0",
