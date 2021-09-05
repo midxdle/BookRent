@@ -10,6 +10,7 @@ var bookModel = function(){
         author: String,
         publisher: String,
         price: Number,
+        qty : Number,
         cover: String
     });
 
