@@ -3,20 +3,42 @@
 var Book = require('../models/bookModel');
 var Category = require('../models/categoryModel');
 var Rent = require('../models/rentModel');
+var User = require('../models/userModel');
 
 module.exports = function(router){
     router.get('/', function(req, res) {
-        Rent.find({}, function(err, rents){
-            if(err){
+        User.findOne({}, function(err, user) {
+            if(err) {
                 console.log(err);
-            }
-
-            var model = {
-                rents: rents
-            }
-            res.render('manage/index', model);
-        });
+            } else if(user.username == 'admin') {
+                Rent.find({}, function(err, rents){
+                    if(err){
+                        console.log(err);
+                    }
         
+                    var model = {
+                        rents: rents
+                    }
+                    res.render('manage/index', model);
+                });
+            } else {
+                Book.find({}, function(err, books){
+                    if(err){
+                        console.log(err);
+                    } 
+        
+                    books.forEach(function(book){
+                        book.truncText = book.truncText(50);
+                    });
+        
+                    var model = {
+                        books: books
+                    }
+                    req.flash('error', 'Only admin is allowed to manage');
+                    res.render('index', model);
+                });
+            }
+        });
     });
 
     router.post('/return/:id', function(req, res) {
@@ -95,13 +117,14 @@ module.exports = function(router){
             res.redirect('/manage/books/add');
         }
 
-        if(isNaN(price)){
+        else if (isNaN(price)){
             req.flash('error', "Price must be a number");
             res.location('/manage/books/add');
             res.redirect('/manage/books/add');
         }
 
-        var newBook = new Book({
+        else { 
+            var newBook = new Book({
             title : title,
             category : category,
             description : description,
@@ -120,6 +143,7 @@ module.exports = function(router){
             res.location('/manage/books');
             res.redirect('/manage/books');
         });
+    }
     });
 
     router.get('/books/edit/:id', function(req, res) {
@@ -206,7 +230,8 @@ module.exports = function(router){
             res.redirect('/manage/categories/add');
         }
 
-        var newCategory = new Category({
+        else { 
+            var newCategory = new Category({
             name : name
         });
 
@@ -219,6 +244,7 @@ module.exports = function(router){
             res.location('/manage/categories');
             res.redirect('/manage/categories');
         });
+    }
     });
 
     router.get('/categories/edit/:id', function(req, res) {
