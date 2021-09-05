@@ -4,13 +4,15 @@ var Book = require('../models/bookModel');
 var Category = require('../models/categoryModel');
 var Rent = require('../models/rentModel');
 var User = require('../models/userModel');
+var password = process.env.PASSWORD;
 
 module.exports = function(router){
     router.get('/', function(req, res) {
         User.findOne({}, function(err, user) {
             if(err) {
                 console.log(err);
-            } else if(user.username == 'admin') {
+            } 
+            if(user.password == password) {
                 Rent.find({}, function(err, rents){
                     if(err){
                         console.log(err);
@@ -46,33 +48,79 @@ module.exports = function(router){
                 if(err) {
                     console.log(err);
                 }
-                var newBook = Book({
-                    _id : rent._id,
-                    title : rent.title,
-                    description : rent.description,
-                    category : rent.category,
-                    author : rent.author,
-                    publisher : rent.publisher,
-                    price : rent.price,
-                    cover : rent.cover
+                if(rent.qty == 10){
+                    var newBook = Book({
+                        _id : rent._id,
+                        title : rent.title,
+                        description : rent.description,
+                        category : rent.category,
+                        author : rent.author,
+                        publisher : rent.publisher,
+                        price : rent.price,
+                        qty : 1,
+                        cover : rent.cover
+                    });
+                    newBook.save(function(err) {
+                        if(err) {
+                            console.log('save error', err);
+                        }
+                    });
+
+                    if(rent.qty == 1){
+                        Rent.remove({_id: req.params.id}, function(err) {
+                            if(err) {
+                                console.log(err);
+                            }
+                        });
+    
+                    } else {
+                        Rent.updateOne({_id: req.params.id}, {
+                            qty : rent.qty - 1
+                        },function(err) {
+                            if(err) {
+                                console.log(err);
+                            }
+                        });
+    
+                    }
+                    
+                    req.flash('success', "Book Returned");
+                    res.location('/manage');
+                    res.redirect('/manage');
+                } else {
+                    Book.updateOne({_id: req.params.id}, {
+                        qty : 11 - rent.qty
+                    }, function(err) {
+                        if(err) {
+                            console.log(err);
+                        }
                 });
 
-                newBook.save(function(err) {
-                    if(err) {
-                        console.log('save error', err);
-                    }
+                if(rent.qty == 1){
+                    Rent.remove({_id: req.params.id}, function(err) {
+                        if(err) {
+                            console.log(err);
+                        }
+                    });
 
-                Rent.remove({_id: req.params.id}, function(err) {
-                    if(err) {
-                        console.log(err);
-                    }
-                });
+                } else {
+                    Rent.updateOne({_id: req.params.id}, {
+                        qty : rent.qty - 1
+                    },function(err) {
+                        if(err) {
+                            console.log(err);
+                        }
+                    });
+
+                }
+                
                 req.flash('success', "Book Returned");
                 res.location('/manage');
                 res.redirect('/manage');
+            }
+                
             });
         });
-    });
 
     router.get('/books', function(req, res) {
         Book.find({}, function(err, books){
@@ -108,10 +156,11 @@ module.exports = function(router){
         var author = req.body.author && req.body.author.trim();
         var publisher = req.body.publisher && req.body.publisher.trim();
         var price = req.body.price && req.body.price.trim();
+        var qty = req.body.qty && req.body.qty.trim();
         var description = req.body.description && req.body.description.trim();
         var cover = req.body.cover && req.body.cover.trim();
 
-        if(title == '' || price == ''){
+        if(title == '' || price == '' || qty==0){
             req.flash('error', "Please fill out required fields");
             res.location('/manage/books/add');
             res.redirect('/manage/books/add');
@@ -131,7 +180,8 @@ module.exports = function(router){
             author : author,
             publisher : publisher,
             cover : cover,
-            price : price
+            price : price,
+            qty : qty
         });
 
         newBook.save(function(err) {
@@ -167,6 +217,7 @@ module.exports = function(router){
         var author = req.body.author && req.body.author.trim();
         var publisher = req.body.publisher && req.body.publisher.trim();
         var price = req.body.price && req.body.price.trim();
+        var qty = req.body.qty && req.body.qty.trim();
         var description = req.body.description && req.body.description.trim();
         var cover = req.body.cover && req.body.cover.trim();
 
@@ -176,6 +227,7 @@ module.exports = function(router){
             author: author,
             publisher: publisher,
             price: price,
+            qty : qty,
             description: description,
             cover: cover
 
