@@ -10,6 +10,7 @@
         <li>Category: {book.category}</li>
         <li>Author: {book.author}</li>
         <li>Publisher: {book.publisher}</li>
+        <li>Qty: {book.qty}</li>
     </ul>
     <br>
     <div class="price"><span>{book.price}</span></div>

@@ -28,6 +28,11 @@
                 <input name="price" type="text" />
               </label>
             </div>
+            <div class="large-12 columns">
+              <label>Qty
+                <input name="qty" type="text" />
+              </label>
+            </div>
           </div>
           <div class="row">
             <div class="large-12 columns">

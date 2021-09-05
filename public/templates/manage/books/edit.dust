@@ -29,6 +29,12 @@
               </label>
             </div>
           </div>
+          <div class="large-12 columns">
+            <label>Qty
+              <input type="text" name="qty" value="{book.qty}" />
+            </label>
+          </div>
+        </div>
           <div class="row">
             <div class="large-12 columns">
               <label>Category

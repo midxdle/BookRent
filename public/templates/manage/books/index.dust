@@ -8,7 +8,8 @@
 	    <tr>
 	      <th width="200">ID</th>
 	      <th width="200">Book Title</th>
-	      <th width="200">Category</th>
+	      <th width="150">Category</th>
+		  <th width="150">Qty</th>
 	      <th width="180"></th>
 	      <th width="180"></th>
 	    </tr>
@@ -19,6 +20,7 @@
 	      <td>{._id}</td>
 	      <td>{.title}</td>
 	      <td>{.category}</td>
+		  <td>{.qty}</td>
 	      <td><a class="button" href="/manage/books/edit/{._id}">Edit</a></td>
 	      <td>
 	      	 <form method="post" action="/manage/books/delete/{._id}">
