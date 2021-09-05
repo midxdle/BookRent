@@ -26,35 +26,77 @@ module.exports = function(router) {
                 if(err) {
                     console.log(err);
                 }
-                var newRent = Rent({
-                    _id : book._id,
-                    title : book.title,
-                    description : book.description,
-                    category : book.category,
-                    author : book.author,
-                    publisher : book.publisher,
-                    price : book.price,
-                    cover : book.cover
-                });
+                if(book.qty == 10){
+                    var newRent = Rent({
+                        _id : book._id,
+                        title : book.title,
+                        description : book.description,
+                        category : book.category,
+                        author : book.author,
+                        publisher : book.publisher,
+                        price : book.price,
+                        qty : 1,
+                        cover : book.cover
+                    });
+                    newRent.save(function(err) {
+                        if(err) {
+                            console.log('save error', err);
+                        }
+                    });
 
-                newRent.save(function(err) {
-                    if(err) {
-                        console.log('save error', err);
-                    }
+                    if(book.qty == 1) {
+                        Book.remove({_id: req.params.id}, function(err) {
+                            if(err) {
+                                console.log(err);
+                            }
+                        });
+                    } else {
+                        Book.updateOne({_id: req.params.id}, {
+                            qty : book.qty - 1
+                        }, function(err) {
+                            if(err) {
+                                console.log(err);
+                            }
+                    });
+                }
+                    
+    
+                    req.flash('success', "Book Rented");
+                    res.location('/cart');
+                    res.redirect('/cart');
+                } else {
+                    Rent.updateOne({_id: req.params.id}, {
+                        qty : 11 - book.qty 
+                    },function(err) {
+                        if(err) {
+                            console.log(err);
+                        }
+                    });
 
-                Book.remove({_id: req.params.id}, function(err) {
-                    if(err) {
-                        console.log(err);
-                    }
-                });
-
-                req.flash('success', "Book Rented");
-                res.location('/cart');
-                res.redirect('/cart');
+                    if(book.qty == 1) {
+                        Book.remove({_id: req.params.id}, function(err) {
+                            if(err) {
+                                console.log(err);
+                            }
+                        });
+                    } else {
+                        Book.updateOne({_id: req.params.id}, {
+                            qty : book.qty - 1
+                        }, function(err) {
+                            if(err) {
+                                console.log(err);
+                            }
+                    });
+                }
+                    
+    
+                    req.flash('success', "Book Rented");
+                    res.location('/cart');
+                    res.redirect('/cart');
+                }
             
             });
         });
-    });
 
     // router.get('/', function(req, res) {
     //     var cart = req.session.cart;
