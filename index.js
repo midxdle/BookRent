@@ -9,6 +9,7 @@ var session = require('express-session');
 var expressValidator = require('express-validator');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy
+require('dotenv').config()
 
 
 var options, app;
