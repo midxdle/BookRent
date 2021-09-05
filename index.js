@@ -4,6 +4,11 @@ var express = require('express');
 var kraken = require('kraken-js');
 var flash = require('connect-flash');
 var db =  require('./lib/db');
+var path = require('path');
+var session = require('express-session');
+var expressValidator = require('express-validator');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy
 
 
 var options, app;
@@ -32,6 +37,14 @@ app.use(kraken(options));
 //     res.locals.messages = require('express-messages')(req, res);
 //     next();
 // });
+app.use(session({
+    secret : 'secret',
+    saveUninitialized: true,
+    resave: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(expressValidator())
 app.use(flash());
 app.use(function (req, res, next) {
     var messages = require('express-messages')(req, res);
